@@ -1,0 +1,21 @@
+{
+    "name": "Tally Counter",
+    "namespace": "INTERSECT\\TallyCounter",
+    "description": "Allows integer fields to be incremented or decremented using buttons, like a tally counter, using the @TALLY Action Tag.",
+    "framework-version": 8,
+    "compatibility": {
+      "php-version-min": "7.3.0",
+      "redcap-version-min": "11.4.0"
+    },
+    "permissions": [
+        "redcap_survey_page_top",
+        "redcap_data_entry_form_top"
+    ],
+    "authors": [
+        {
+            "name": "Aidan Wilson",
+            "email": "aidan.wilson@intersect.org.au",
+            "institution": "Intersect Australia"
+        }
+    ]
+}
