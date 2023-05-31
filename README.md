@@ -1,6 +1,6 @@
 # REDCap Tally Counter
 
-This REDCap External Module allows users to create tally counter fields in which the click or tap of a button increments/decrements a tally count by 1.
+Converts an integer or number validated text entry field into a tally counter with buttons for incrementing and decrementing the value.
 
 ## Installation
 
@@ -14,14 +14,14 @@ Clone the repository and rename the directory to include a version number, e.g.,
 
 ## Usage
 
-Create a text entry field with either `integer` or `number` validation, and annotate it with `@TALLY.` On surveys and data entry forms, fields are augmented with decrement and increment buttons, which, when clicked or tapped, will decrement or increment the current value of the field.
+Create a text entry field with either `integer` or `number` validation, and annotate it with `@TALLY.` On surveys and data entry forms, fields are augmented with increment and decrement buttons, which, when clicked or tapped, will increment or decrement the current value of the field.
 
 ## Why?
 
-Ecological studies often follow a design whereby a sample area is defined and marked, and then surveyors inspect the area to count instances of various items. These inspections are repeated on a regular basis, and the numbers of those various items charted over time. Due to the number of items that surveyors might be searching for, it is not feasible to mentally count and then enter the number upon completion of the inspection, which would be required with a traditional REDCap integer field. Such a method would require repeating the inspection per item.
+Tally counters are used in several research disciplines. They are used any time the research project needs to reliably count tokens of anything. Traffic studies utilise tally counters to sample the density and variety of traffic flow. Ecologists use tally counters to count occurrences of animals, or otherwise occurrences of evidence of animals such as tracks, droppings, burrows, or the occurrence of foreign objects, such as plastic bags, discarded cigarettes, food waste.
 
-Traditionally, such studies would employ a tally counter, or a series of tally counters mounted to a clipboard, which allows a single survey to inspect for perhaps a handful of items at a time.
+Traditionally, such studies would employ a physical tally counter, or a series of tally counters mounted to a clipboard, which allows a single survey to inspect for perhaps a handful of items at a time.
 
-Using this module, a form can be built using Field Embedding, that can display as many digital tally counters as can fit on the display of the device being used.
+Using this module, a form can be built using Field Embedding, that can display as many digital tally counters as can feasibly fit on the display of the device being used.
 
 CSS injection (using the REDCap CSS Injector module) can be used to, for example, hide the decrement button so that the tally may only increment, or it can alter the size and colour of the buttons. Buttons are created using classes `tally-counter,` `tally-plus` and `tally-minus` for simple CSS targeting.
