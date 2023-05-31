@@ -6,6 +6,78 @@ use ExternalModules\AbstractExternalModule;
 
 class TallyCounter extends \ExternalModules\AbstractExternalModule {
 
+    // Output JavaScript to amend the action tags guide.
+    // This code borrowed, with thanks, from Richard Dooley (https://github.com/richdooley)
+
+	function provideActionTagExplain( $listActionTags )
+	{
+		if ( empty( $listActionTags ) )
+		{
+			return;
+		}
+		$listActionTagsJS = [];
+		foreach ( $listActionTags as $t => $d )
+		{
+			$listActionTagsJS[] = [ $t, $d ];
+		}
+		$listActionTagsJS = json_encode( $listActionTagsJS );
+
+?>
+<script type="text/javascript">
+$(function()
+{
+  var vActionTagPopup = actionTagExplainPopup
+  var vMakeRow = function(vTag, vDesc, vTable)
+  {
+    var vRow = $( '<tr>' + vTable.find('tr:first').html() + '</tr>' )
+    var vOldTag = vRow.find('td:eq(1)').html()
+    var vButton = vRow.find('button')
+    vRow.find('td:eq(1)').html(vTag)
+    vRow.find('td:eq(2)').html(vDesc)
+    if ( vButton.length != 0 )
+    {
+      vButton.attr('onclick', vButton.attr('onclick').replace(vOldTag,vTag))
+    }
+    var vRows = vTable.find('tr')
+    var vInserted = false
+    for ( var i = 0; i < vRows.length; i++ )
+    {
+      var vA = vRows.eq(i).find('td:eq(1)').html()
+      if ( vTag < vRows.eq(i).find('td:eq(1)').html() )
+      {
+        vRows.eq(i).before(vRow)
+        vInserted = true
+        break
+      }
+    }
+    if ( ! vInserted )
+    {
+      vRows.last().after(vRow)
+    }
+  }
+  actionTagExplainPopup = function(hideBtns)
+  {
+    vActionTagPopup(hideBtns)
+    var vCheckTagsPopup = setInterval( function()
+    {
+      if ( $('div[aria-describedby="action_tag_explain_popup"]').length == 0 )
+      {
+        return
+      }
+      clearInterval( vCheckTagsPopup )
+      var vActionTagTable = $('#action_tag_explain_popup table');
+      <?php echo $listActionTagsJS; ?>.forEach(function(vItem)
+      {
+        vMakeRow(vItem[0],vItem[1],vActionTagTable)
+      })
+    }, 200 )
+  }
+})
+</script>
+<?php
+
+    }
+
     function getTags($tag,$instrument) {
         // This is straight out of Andy Martin's example post on this:
         // https://community.projectredcap.org/questions/32001/custom-action-tags-or-module-parameters.html
@@ -106,5 +178,23 @@ class TallyCounter extends \ExternalModules\AbstractExternalModule {
     }
     function redcap_data_entry_form_top($project_id, $record, $instrument, $event_id, $group_id, $repeat_instance){
         $this->add_tally_counter($instrument);
+    }
+    function redcap_every_page_top( $project_id = null )
+    {
+    
+		// Amend the list of action tags (accessible from the add/edit field window in the
+		// instrument designer) when features which provide extra action tags are enabled.
+        // This code borrowed, with thanks, from Richard Dooley (https://github.com/richdooley)
+
+		if ( substr( PAGE_FULL, strlen( APP_PATH_WEBROOT ), 26 ) == 'Design/online_designer.php' ||
+		     substr( PAGE_FULL, strlen( APP_PATH_WEBROOT ), 22 ) == 'ProjectSetup/index.php' )
+		{
+			$listActionTags = [];
+			{
+				$listActionTags['@TALLY'] =
+					'Converts text entry fields with either number or integer validation to tally fields with a plus and minus button for incrementing and decrementing the field\'s value by 1.';
+			}
+			$this->provideActionTagExplain( $listActionTags );
+		}
     }
 }
